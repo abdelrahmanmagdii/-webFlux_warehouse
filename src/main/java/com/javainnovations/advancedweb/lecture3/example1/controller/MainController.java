@@ -87,7 +87,7 @@ public class MainController {
             System.out.println("processMsg "+msg);
             return Mono.just(Message.builder()
                     .id(id)
-                    .text(msg+" was read")
+                    .text(msg+" was read successfully")
                     .build());
         }
         catch (Exception ex)
