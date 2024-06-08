@@ -1,0 +1,79 @@
+CREATE SCHEMA `art_without_border` DEFAULT CHARACTER SET utf8 ;
+
+CREATE TABLE `art_without_border`.`user_status` (
+  `id` INT NOT NULL  AUTO_INCREMENT,
+  `status` VARCHAR(40) NOT NULL,
+  PRIMARY KEY (`id`));
+
+  INSERT INTO `art_without_border`.`user_status` (`id`, `status`) VALUES ('1', 'active');
+  INSERT INTO `art_without_border`.`user_status` (`id`, `status`) VALUES ('2', 'pending');
+  INSERT INTO `art_without_border`.`user_status` (`id`, `status`) VALUES ('3', 'suspended');
+  INSERT INTO `art_without_border`.`user_status` (`id`, `status`) VALUES ('4', 'deleted');
+
+
+  CREATE TABLE `art_without_border`.`app_user` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `email` VARCHAR(100) NOT NULL,
+    `password` VARCHAR(100) NOT NULL,
+    `status_id` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
+    INDEX `app_user_fk1_idx` (`status_id` ASC) VISIBLE,
+    CONSTRAINT `app_user_fk1`
+      FOREIGN KEY (`status_id`)
+      REFERENCES `art_without_border`.`user_status` (`id`)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+CREATE TABLE `art_without_border`.`store` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`));
+
+  INSERT INTO `art_without_border`.`store` (`id`, `name`) VALUES ('1', 'core');
+
+CREATE TABLE `art_without_border`.`user_role` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NULL,
+    `store_id` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `user_role_fk1_idx` (`store_id` ASC) VISIBLE,
+    CONSTRAINT `user_role_fk1`
+      FOREIGN KEY (`store_id`)
+      REFERENCES `art_without_border`.`store` (`id`)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION);
+
+INSERT INTO `art_without_border`.`user_role`
+(`id`,`name`,`store_id`)VALUES(1,'ADMIN',1);
+INSERT INTO `art_without_border`.`user_role`
+(`id`,`name`,`store_id`)VALUES(2,'OPERATOR',1);
+INSERT INTO `art_without_border`.`user_role`
+(`id`,`name`,`store_id`)VALUES(3,'SALE',1);
+
+CREATE TABLE `art_without_border`.`user_role_list` (
+  `user_id` INT NOT NULL,
+  `role_id` INT NOT NULL,
+  PRIMARY KEY (`user_id`, `role_id`),
+  INDEX `user_role_list_fk2_idx` (`role_id` ASC) VISIBLE,
+  CONSTRAINT `user_role_list_fk1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `art_without_border`.`app_user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `user_role_list_fk2`
+    FOREIGN KEY (`role_id`)
+    REFERENCES `art_without_border`.`user_role` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('1', '1');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('1', '2');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('1', '3');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('2', '2');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('3', '3');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('4', '1');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('4', '2');
+INSERT INTO `art_without_border`.`user_role_list` (`user_id`, `role_id`) VALUES ('4', '3');
+
+
